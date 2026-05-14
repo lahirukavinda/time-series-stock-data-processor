@@ -1,4 +1,6 @@
 import pytest
+import sqlite3
+import os
 from fastapi.testclient import TestClient
 from unittest.mock import patch, AsyncMock
 from app.main import app
@@ -10,6 +12,25 @@ def setup_database():
     init_db()
     yield
     close_db_connection()
+
+
+@pytest.fixture(scope="function", autouse=True)
+def clean_database():
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'market_data.db')
+
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM monthly_market_data")
+    conn.commit()
+    conn.close()
+
+    yield
+
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM monthly_market_data")
+    conn.commit()
+    conn.close()
 
 
 @pytest.fixture

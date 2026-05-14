@@ -1,8 +1,6 @@
 import sqlite3
-import os
 import threading
-
-DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'market_data.db')
+from app.core.settings import DB_PATH
 
 _local = threading.local()
 

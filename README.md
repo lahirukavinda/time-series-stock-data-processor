@@ -89,7 +89,8 @@ app/
 ├── main.py              # FastAPI endpoint
 ├── core/
 │   ├── database.py      # Database connection
-│   └── repository.py    # Data access layer
+│   ├── repository.py    # Data access layer
+│   └── settings.py      # Configuration settings
 ├── services/
 │   └── market_data.py   # Alpha Vantage integration
 └── tests/

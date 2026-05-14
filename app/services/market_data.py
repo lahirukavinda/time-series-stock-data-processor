@@ -1,14 +1,8 @@
 import httpx
-import os
-from dotenv import load_dotenv
 from fastapi import HTTPException
 from typing import Dict
 from app.core.repository import MarketDataRepository
-
-load_dotenv()
-
-ALPHA_VANTAGE_URL = "https://www.alphavantage.co/query"
-API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY", "demo")
+from app.core.settings import ALPHA_VANTAGE_URL, API_KEY, HTTP_TIMEOUT
 
 
 async def fetch_and_save_data(symbol: str, year: int) -> Dict[str, str] | None:
@@ -20,7 +14,7 @@ async def fetch_and_save_data(symbol: str, year: int) -> Dict[str, str] | None:
 
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(ALPHA_VANTAGE_URL, params=params, timeout=30.0)
+            response = await client.get(ALPHA_VANTAGE_URL, params=params, timeout=HTTP_TIMEOUT)
             if response.status_code != 200:
                 raise HTTPException(status_code=502, detail="External API error")
 
