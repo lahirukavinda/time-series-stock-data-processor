@@ -1,16 +1,16 @@
 import sqlite3
 import os
+import threading
 
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'market_data.db')
 
-_connection = None
+_local = threading.local()
 
 def get_db_connection():
-    global _connection
-    if _connection is None:
-        _connection = sqlite3.connect(DB_PATH)
-        _connection.row_factory = sqlite3.Row
-    return _connection
+    if not hasattr(_local, 'connection'):
+        _local.connection = sqlite3.connect(DB_PATH)
+        _local.connection.row_factory = sqlite3.Row
+    return _local.connection
 
 def init_db():
     conn = get_db_connection()
@@ -32,7 +32,6 @@ def init_db():
     conn.commit()
 
 def close_db_connection():
-    global _connection
-    if _connection:
-        _connection.close()
-        _connection = None
+    if hasattr(_local, 'connection'):
+        _local.connection.close()
+        delattr(_local, 'connection')

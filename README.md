@@ -20,6 +20,22 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 API docs available at: http://localhost:8000/docs
 
+## Test
+
+```bash
+# Run all tests
+pytest
+
+# Run specific test file
+pytest app/tests/test_repository.py
+
+# Run with coverage
+pytest --cov=app --cov-report=html
+
+# Run tests in verbose mode
+pytest -v
+```
+
 ## API
 
 ### GET /symbols/{symbol}/annual/{year}
@@ -72,12 +88,12 @@ CREATE TABLE monthly_market_data (
 app/
 ├── main.py              # FastAPI endpoint
 ├── core/
-│   └── database.py      # Database connection and schema
+│   ├── database.py      # Database connection
 │   └── repository.py    # Data access layer
 ├── services/
-│   └── market_data.py   # Alpha Vantage API integration
+│   └── market_data.py   # Alpha Vantage integration
 └── tests/
-    └── case_1_basic_logic.py  # Test data
+    ├── test_repository.py     # Repository tests
+    ├── test_market_data_service.py  # Service tests
+    └── test_api.py           # API endpoint tests
 ```
-
-
