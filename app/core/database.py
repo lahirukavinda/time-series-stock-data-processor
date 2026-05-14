@@ -3,10 +3,14 @@ import os
 
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'market_data.db')
 
+_connection = None
+
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    global _connection
+    if _connection is None:
+        _connection = sqlite3.connect(DB_PATH)
+        _connection.row_factory = sqlite3.Row
+    return _connection
 
 def init_db():
     conn = get_db_connection()
@@ -26,4 +30,9 @@ def init_db():
         )
     ''')
     conn.commit()
-    conn.close()
+
+def close_db_connection():
+    global _connection
+    if _connection:
+        _connection.close()
+        _connection = None
